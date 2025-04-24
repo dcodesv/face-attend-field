@@ -1,7 +1,4 @@
 
-import * as tf from '@tensorflow/tfjs';
-import * as faceapi from '@tensorflow-models/face-landmarks-detection';
-
 // Interface para guardar los datos de rostros
 export interface FaceData {
   employeeId: string;
@@ -10,19 +7,12 @@ export interface FaceData {
   timestamp: number;
 }
 
-// Cargar modelos necesarios para reconocimiento facial
+// Variables para el sistema de reconocimiento facial simplificado
 let faceMatcher: any = null;
-let model: any = null;
 
 export const initFaceRecognition = async (): Promise<void> => {
   try {
-    // Cargar modelo de TensorFlow.js para detección facial
-    await tf.ready();
-    model = await faceapi.load(
-      faceapi.SupportedPackages.mediapipeFacemesh
-    );
-    
-    console.log("Modelo de reconocimiento facial cargado");
+    console.log("Inicializando sistema de reconocimiento facial simulado");
     
     // Cargar datos de rostros guardados previamente
     await loadSavedFaces();
@@ -34,34 +24,33 @@ export const initFaceRecognition = async (): Promise<void> => {
   }
 };
 
-// Función para detectar rostros en una imagen
+// Función para simular la detección de rostros en una imagen
 export const detectFace = async (imageElement: HTMLImageElement): Promise<any> => {
-  if (!model) {
-    await initFaceRecognition();
-  }
-  
   try {
-    // Detectar el rostro en la imagen
-    const predictions = await model.estimateFaces({
-      input: imageElement,
-      returnTensors: false,
-      flipHorizontal: false,
-    });
+    // Esta es una simulación simplificada - en un entorno real usaríamos
+    // un modelo de ML para detectar rostros
+    console.log("Simulando detección de rostro");
     
-    if (!predictions || predictions.length === 0) {
-      console.log("No se detectaron rostros");
-      return null;
-    }
+    // Simulamos que siempre detectamos un rostro para simplificar
+    const simulatedFaceDetection = {
+      boundingBox: {
+        x: Math.random() * 50,
+        y: Math.random() * 50,
+        width: 200,
+        height: 200
+      },
+      landmarks: Array(68).fill(0).map(() => ({ x: Math.random() * 300, y: Math.random() * 300 })),
+      faceScore: 0.98
+    };
     
-    console.log("Rostro detectado:", predictions[0]);
-    return predictions[0];
+    return simulatedFaceDetection;
   } catch (error) {
     console.error("Error detectando rostro:", error);
     return null;
   }
 };
 
-// Función para extraer características del rostro
+// Función para extraer características del rostro (simulado)
 export const extractFaceFeatures = async (imageElement: HTMLImageElement): Promise<number[] | null> => {
   const faceDetection = await detectFace(imageElement);
   
@@ -70,9 +59,8 @@ export const extractFaceFeatures = async (imageElement: HTMLImageElement): Promi
   }
   
   try {
-    // Aquí simplificamos - en una implementación real se extraerían
-    // características más robustas usando el modelo apropiado
     // Para simulación, creamos un vector de características aleatorio simulado
+    // En un caso real, estas características se extraerían del rostro detectado
     const descriptor = Array.from({length: 128}, () => Math.random() * 2 - 1);
     
     return descriptor;
